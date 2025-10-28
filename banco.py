@@ -1,12 +1,12 @@
 contas = [{
     'nome': 'Eliseu',
-    'cpf_cnpj': '123.123.123-12',
+    'cpf_cnpj': '123.456.789-10',
     'tipo_conta': 'p',
     'saldo': 500,
     'senha': 123456
 },{
     'nome': 'Elias',
-    'cpf_cnpj': '12.123.123/0001-12',
+    'cpf_cnpj': '12.345.678/0001-10',
     'tipo_conta': 'j',
     'saldo': 300,
     'senha': 123457
@@ -16,17 +16,23 @@ opcao = 0
 
 def login():
 
-    tipo = input('Informe o tipo de conta: ')
     print('C: corrente, P: poupança, S: salário, J: jurídica')
+    tipo = input('Informe o tipo de conta: ')
 
-    if tipo == 'j' or 'J':
-        login = int(input('Informe o CNPJ, apenas números: '))
+    tipo_formatado = tipo.lower()
+
+    if tipo_formatado == 'j':
+        login = input('Informe o CNPJ, apenas números: ')
+        login_formatado = f'{login[0:2]}.{login[2:5]}.{login[5:8]}/{login[8:12]}-{login[12:14]}'
+        
     else:
-        login = int(input('Informe seu CPF, apenas números: '))
-
+        login = input('Informe seu CPF, apenas números: ')
+        login_formatado = f'{login[0:3]}.{login[3:6]}.{login[6:9]}-{login[9:11]}'
+        
+    
     for conta in contas:
 
-        if conta['cpf_cnpj']  == login:
+        if conta['cpf_cnpj']  == login_formatado:
             
             contador = 3
 
@@ -42,20 +48,42 @@ def login():
                     return conta 
                 else:
                     senha = int(input(f"Senha incorreta! Tente novamente. Lembrando, você só tem {contador} chances. "))
+            
+            print(conta)
+
+    #return print(conta)
+        
+        
 
 def transferir(conta):
 
-    conta_destino = int(input('Digite o cpf ou cnpj da conta destino: '))
+    conta_destino = input('Digite o cpf ou cnpj da conta destino: ')
     vlr = float(input('Digite o valor que você quer transferir: '))
 
-    for destino in contas:
-        if conta_destino == destino['cpf_cnpj']:
-            conta['saldo'] -= vlr
-            destino['saldo'] += vlr
+    if vlr < conta['saldo']:
+        if len(conta_destino) == 11:
+
+            conta_destino_formatado = f'{conta_destino[0:3]}.{conta_destino[3:6]}.{conta_destino[6:9]}-{conta_destino[9:11]}'
         
-    print("__________Tranzação realizada com sucesso!_________")
-    print(f"Origem: {conta['nome']} CPF: {conta['cpf_cnpj']}  Saldo: {conta['saldo']}")
-    print(f"Destino: {destino['nome']} CPF: {destino['cpf_cnpj']}  Saldo: {destino['saldo']}")
+        else:
+
+            conta_destino_formatado = f'{conta_destino[0:2]}.{conta_destino[2:5]}.{conta_destino[5:8]}/{conta_destino[8:12]}-{conta_destino[12:14]}'
+        
+        print(conta_destino_formatado)
+
+
+        for destino in contas:
+            if conta_destino_formatado == destino['cpf_cnpj']:
+                conta['saldo'] -= vlr
+                destino['saldo'] += vlr
+
+        
+            
+        print("__________Tranzação realizada com sucesso!_________")
+        print(f"Origem: {conta['nome']} CPF: {conta['cpf_cnpj']}  Saldo: {conta['saldo']}")
+        print(f"Destino: {conta_destino_formatado['nome']} CPF: {conta_destino_formatado['cpf_cnpj']}  Saldo: {conta_destino_formatado['saldo']}")
+    else:
+        print('Saldo insuficiente.')
 
                 
 def depositar(vlr, conta):
