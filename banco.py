@@ -1,14 +1,14 @@
 contas = [{
     'nome': 'Eliseu',
-    'cpf_cnpj': 1212,
+    'cpf_cnpj': '123.123.123-12',
     'tipo_conta': 'p',
-    'saldo': 150,
+    'saldo': 500,
     'senha': 123456
 },{
     'nome': 'Elias',
-    'cpf_cnpj': 1313,
+    'cpf_cnpj': '12.123.123/0001-12',
     'tipo_conta': 'j',
-    'saldo': 200,
+    'saldo': 300,
     'senha': 123457
 }]
 
@@ -16,18 +16,24 @@ opcao = 0
 
 def login():
 
-    login = int(input('Informe seu CPF ou CNPJ: '))
+    tipo = input('Informe o tipo de conta: ')
+    print('C: corrente, P: poupança, S: salário, J: jurídica')
+
+    if tipo == 'j' or 'J':
+        login = int(input('Informe o CNPJ, apenas números: '))
+    else:
+        login = int(input('Informe seu CPF, apenas números: '))
 
     for conta in contas:
+
         if conta['cpf_cnpj']  == login:
             
             contador = 3
 
-            senha = int(input(f'Olá {conta['nome']}, informe sua senha: '))
+            senha = int(input(f"Olá {conta['nome']}, informe sua senha: "))
 
 
             while contador != 1:
-                
 
                 contador -= 1
 
@@ -35,27 +41,22 @@ def login():
                     print('Login realizado com sucesso!')
                     return conta 
                 else:
-                    senha = int(input(f'Senha incorreta! Tente novamente. Lembrando, você só tem {contador} chances. '))
-        else:
-            print('Essa conta não existe no nosso banco de dados. Realize seu cadastro.')
-            nome = input('Nome: ')
-            cpf = int(input('CPF ou CNPJ: '))
-            tipo = input('Tipo de conta: ')
-            senha= int(input('Defina sua senha: '))
-            cadastro(nome, cpf, tipo, senha)
-            break
+                    senha = int(input(f"Senha incorreta! Tente novamente. Lembrando, você só tem {contador} chances. "))
 
-def transferir(conta_origem, conta_destino, vlr):
+def transferir(conta):
 
-        for conta in contas:
-              if conta_destino == conta:
-                print(conta)
-                print(conta_origem)
-                print(vlr)
+    conta_destino = int(input('Digite o cpf ou cnpj da conta destino: '))
+    vlr = float(input('Digite o valor que você quer transferir: '))
+
+    for destino in contas:
+        if conta_destino == destino['cpf_cnpj']:
+            conta['saldo'] -= vlr
+            destino['saldo'] += vlr
         
-        '''print(f'Saldo de {conta_origem['nome']} é: {conta_origem['saldo']}')
-        print(f'Saldo de {conta['nome']} é: {conta['saldo']}')
-        print('Transferencia realizada com sucesso!')'''
+    print("__________Tranzação realizada com sucesso!_________")
+    print(f"Origem: {conta['nome']} CPF: {conta['cpf_cnpj']}  Saldo: {conta['saldo']}")
+    print(f"Destino: {destino['nome']} CPF: {destino['cpf_cnpj']}  Saldo: {destino['saldo']}")
+
                 
 def depositar(vlr, conta):
 
@@ -109,16 +110,13 @@ while True:
 
             elif opcao == 1:
                 print('__________Depositar__________')
-                vlr = float(input(f'{conta['nome']}, digite o valor do deposito: '))
+                vlr = float(input(f"{conta['nome']}, digite o valor do deposito: "))
                 depositar(vlr, conta)
                 print(conta)
 
             elif opcao == 2:
                 print('Transferir')
-                conta_destino = int(input('Digite o cpf ou cnpj da conta destino: '))
-                vlr = float(input('Digite o valor que você quer transferir: '))
-                conta_origem = conta
-                transferir(conta_origem, conta_destino, vlr)
+                transferir(conta)
 
     elif opcao == 3:
         print(contas)
