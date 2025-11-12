@@ -1,0 +1,22 @@
+n = int(input())
+
+contador = 0
+
+while True:
+
+    if contador == n:
+        break
+
+    else:
+
+        n1, n2, n3 = input().split()
+
+        n1 = float(n1)
+        n2 = float(n2)
+        n3 = float(n3)
+
+        media = (n1*2+n2*3+n3*5)/(2+3+5)
+
+        print(f'{media:.1f}')
+
+    contador += 1
